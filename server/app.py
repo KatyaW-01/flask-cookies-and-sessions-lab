@@ -32,6 +32,16 @@ def show_article(id):
     if id:
         session['page_views'] += 1
 
+    if session['page_views'] <= 3:
+        article_data = Article.query.filter_by(id=id).first()
+        article = ArticleSchema().dump(article_data)
+        response = make_response(jsonify({"article": article
+        }),200)
+    else: 
+        response = make_response(jsonify({"message": "Maximum pageview limit reached"}),401)
+
+    return response
+
 
 if __name__ == '__main__':
     app.run(port=5555)
